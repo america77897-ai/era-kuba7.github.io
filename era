@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>era_kuba7</title>
+<title>Drift Scoreboard Japan</title>
 
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
 
@@ -60,7 +60,7 @@ body{
 
 canvas{position:fixed;inset:0;z-index:-1}
 
-.wrapper{max-width:900px;margin:auto;padding:40px 20px 80px}
+.wrapper{max-width:980px;margin:auto;padding:40px 20px 80px}
 
 .header{display:flex;justify-content:space-between;align-items:center}
 .logo{font-weight:800;font-size:18px}
@@ -81,7 +81,7 @@ canvas{position:fixed;inset:0;z-index:-1}
 }
 
 .hero h1{
-  font-size:64px;
+  font-size:58px;
   font-weight:800;
   margin:0;
   line-height:1;
@@ -101,29 +101,42 @@ canvas{position:fixed;inset:0;z-index:-1}
   white-space:nowrap;
 }
 
-/* AVATAR */
-.avatar-wrap{
-  width:220px;
-  height:220px;
+/* SCORE BADGE */
+.badge-wrap{
+  width:240px;
+  height:240px;
   perspective:900px;
   position:relative;
-  cursor:pointer;
 }
 
-.avatar{
+.badge{
   width:100%;
   height:100%;
-  border-radius:50%;
-  background:#111 center/cover no-repeat;
+  border-radius:32px;
+  background:
+    radial-gradient(circle at 30% 20%,rgba(124,124,255,.4),transparent 55%),
+    linear-gradient(140deg,#0b0b15,#1a1a3f);
+  border:1px solid rgba(255,255,255,.06);
   box-shadow:0 0 40px rgba(124,124,255,.7),
-             0 0 120px rgba(124,124,255,.4);
+             0 0 120px rgba(124,124,255,.35);
   transition:transform .15s ease;
   position:relative;
   overflow:hidden;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+  padding:20px;
+  gap:12px;
 }
 
+.badge span{font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:2px}
+.badge strong{font-size:44px}
+.badge em{font-style:normal;color:var(--accent);font-weight:600}
+
 /* SCAN LINE */
-.avatar::after{
+.badge::after{
   content:'';
   position:absolute;
   inset:0;
@@ -143,7 +156,7 @@ canvas{position:fixed;inset:0;z-index:-1}
 }
 
 /* GLITCH */
-.avatar.glitch{
+.badge.glitch{
   animation:glitch .25s steps(2,end);
 }
 
@@ -151,22 +164,6 @@ canvas{position:fixed;inset:0;z-index:-1}
   0%{filter:drop-shadow(2px 0 red)}
   50%{filter:drop-shadow(-2px 0 cyan)}
   100%{filter:none}
-}
-
-/* INPUT */
-#urlBox{
-  position:absolute;
-  bottom:-50px;
-  left:50%;
-  transform:translateX(-50%);
-  width:260px;
-  padding:10px;
-  border-radius:12px;
-  border:none;
-  outline:none;
-  background:#0f0f1f;
-  color:#fff;
-  display:none;
 }
 
 .section{margin-top:140px}
@@ -181,6 +178,37 @@ canvas{position:fixed;inset:0;z-index:-1}
   margin-bottom:16px;
 }
 
+.grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(240px,1fr));
+  gap:18px;
+}
+
+.scoreline{
+  display:flex;
+  justify-content:space-between;
+  color:var(--muted);
+  font-size:14px;
+  margin-top:8px;
+}
+
+.tag{
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+  padding:6px 10px;
+  border-radius:999px;
+  border:1px solid rgba(255,255,255,.08);
+  font-size:12px;
+  color:var(--muted);
+  margin-right:8px;
+}
+
+.rating{
+  font-size:22px;
+  font-weight:700;
+}
+
 .reveal{opacity:0;transform:translateY(30px);transition:.8s ease}
 .reveal.active{opacity:1;transform:none}
 
@@ -189,6 +217,7 @@ canvas{position:fixed;inset:0;z-index:-1}
 @media(max-width:700px){
   .hero{flex-direction:column;text-align:center}
   .hero h1{font-size:40px}
+  .badge-wrap{width:200px;height:200px}
 }
 </style>
 </head>
@@ -205,40 +234,97 @@ canvas{position:fixed;inset:0;z-index:-1}
 <div class="wrapper">
 
   <div class="header">
-    <div class="logo">era_kuba7</div>
+    <div class="logo">Drift Scoreboard</div>
     <div class="nav">
-      <a href="#about">Обо мне</a>
-      <a href="#skills">Skills</a>
+      <a href="#about">О проекте</a>
+      <a href="#scores">Рейтинг</a>
+      <a href="#cars">Топ машины</a>
       <a href="#contact">Контакты</a>
     </div>
   </div>
 
   <section class="hero reveal" id="hero">
     <div>
-      <h1>Привет, я <span id="typing" class="typing"></span></h1>
-      <p>Персональный сайт с неоном, сканером и глитч-эффектами.</p>
+      <h1>Japan Drift <span id="typing" class="typing"></span></h1>
+      <p>Скоринг-панель для топовых японских дрифт-каров: очки за стиль, контроль и зрелищность.</p>
+      <div class="tag">⚡ Стиль</div>
+      <div class="tag">🎯 Контроль</div>
+      <div class="tag">🔥 Угол</div>
     </div>
 
-    <div class="avatar-wrap" id="avatarWrap">
-      <div class="avatar" id="avatar"></div>
-      <input id="urlBox" placeholder="Вставь ссылку на фото и Enter">
+    <div class="badge-wrap">
+      <div class="badge" id="badge">
+        <span>Лидер дня</span>
+        <strong>96</strong>
+        <em>Nissan Silvia S15</em>
+      </div>
     </div>
   </section>
 
   <section id="about" class="section reveal">
-    <h2>Обо мне</h2>
-    <div class="card">Люблю современные интерфейсы и эффекты.</div>
+    <h2>О проекте</h2>
+    <div class="card">
+      Здесь мы собираем скоринг по японским дрифт-машинам: оцениваем мощность, баланс шасси, отдачу турбо и
+      стабильность в затяжных дугах. Итоговый балл — сумма трёх ключевых показателей.
+    </div>
   </section>
 
-  <section id="skills" class="section reveal">
-    <h2>Skills</h2>
-    <div class="card">HTML / CSS</div>
-    <div class="card">JavaScript</div>
+  <section id="scores" class="section reveal">
+    <h2>Рейтинг по скорингу</h2>
+    <div class="grid">
+      <div class="card">
+        <div class="rating">1. Nissan Silvia S15</div>
+        <div class="scoreline"><span>Стиль</span><span>32</span></div>
+        <div class="scoreline"><span>Контроль</span><span>31</span></div>
+        <div class="scoreline"><span>Угол</span><span>33</span></div>
+        <div class="scoreline"><strong>Итого</strong><strong>96</strong></div>
+      </div>
+      <div class="card">
+        <div class="rating">2. Toyota Supra MK4</div>
+        <div class="scoreline"><span>Стиль</span><span>30</span></div>
+        <div class="scoreline"><span>Контроль</span><span>30</span></div>
+        <div class="scoreline"><span>Угол</span><span>32</span></div>
+        <div class="scoreline"><strong>Итого</strong><strong>92</strong></div>
+      </div>
+      <div class="card">
+        <div class="rating">3. Nissan Skyline R34</div>
+        <div class="scoreline"><span>Стиль</span><span>29</span></div>
+        <div class="scoreline"><span>Контроль</span><span>29</span></div>
+        <div class="scoreline"><span>Угол</span><span>31</span></div>
+        <div class="scoreline"><strong>Итого</strong><strong>89</strong></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="cars" class="section reveal">
+    <h2>Топовые японские дрифт-кары</h2>
+    <div class="grid">
+      <div class="card">
+        <h3>Nissan Silvia S15</h3>
+        <p>Мощность: 450 л.с. · Привод: задний · Вес: 1240 кг</p>
+        <p>Сильные стороны: отзывчивый турбо-отклик, лёгкая настройка угла, стабильная геометрия подвески.</p>
+      </div>
+      <div class="card">
+        <h3>Toyota Supra MK4</h3>
+        <p>Мощность: 520 л.с. · Привод: задний · Вес: 1490 кг</p>
+        <p>Сильные стороны: высокий крутящий момент, зрелищные перекладки, надёжность на длинных заездах.</p>
+      </div>
+      <div class="card">
+        <h3>Nissan Skyline R34</h3>
+        <p>Мощность: 480 л.с. · Привод: задний (конверсия) · Вес: 1500 кг</p>
+        <p>Сильные стороны: жёсткое шасси, чёткий контроль траектории, стабильность на высоких скоростях.</p>
+      </div>
+      <div class="card">
+        <h3>Mazda RX-7 FD</h3>
+        <p>Мощность: 420 л.с. · Привод: задний · Вес: 1245 кг</p>
+        <p>Сильные стороны: лёгкий роторный мотор, быстрые перекладки, плавная динамика.</p>
+      </div>
+    </div>
   </section>
 
   <section id="contact" class="section reveal">
     <h2>Контакты</h2>
-    <div class="card">Telegram: @era_kuba7</div>
+    <div class="card">Telegram: @era_kuba7 · Тема: Drift Scoreboard</div>
   </section>
 
   <div class="footer">© 2025 era_kuba7</div>
@@ -258,7 +344,7 @@ window.addEventListener('load',()=>{
 });
 
 // typing
-const text='era_kuba7';
+const text='Scoreboard';
 let i=0;
 const el=document.getElementById('typing');
 (function t(){
@@ -278,40 +364,20 @@ addEventListener('scroll',()=>{
 });
 
 // avatar tilt + glitch
-const avatar=document.getElementById('avatar');
-avatar.addEventListener('mousemove',e=>{
-  const r=avatar.getBoundingClientRect();
+const badge=document.getElementById('badge');
+badge.addEventListener('mousemove',e=>{
+  const r=badge.getBoundingClientRect();
   const x=e.clientX-r.left-r.width/2;
   const y=e.clientY-r.top-r.height/2;
-  avatar.style.transform=`rotateX(${-y/15}deg) rotateY(${x/15}deg)`;
+  badge.style.transform=`rotateX(${-y/15}deg) rotateY(${x/15}deg)`;
 });
-avatar.addEventListener('mouseleave',()=>{
-  avatar.style.transform='rotateX(0) rotateY(0)';
+badge.addEventListener('mouseleave',()=>{
+  badge.style.transform='rotateX(0) rotateY(0)';
 });
 setInterval(()=>{
-  avatar.classList.add('glitch');
-  setTimeout(()=>avatar.classList.remove('glitch'),120);
+  badge.classList.add('glitch');
+  setTimeout(()=>badge.classList.remove('glitch'),120);
 },3000);
-
-// avatar via URL
-const box=document.getElementById('urlBox');
-document.getElementById('avatarWrap').onclick=()=>{
-  box.style.display='block';
-  box.focus();
-};
-
-box.addEventListener('keydown',e=>{
-  if(e.key==='Enter'){
-    avatar.style.backgroundImage=`url(${box.value})`;
-    localStorage.setItem('avatarURL',box.value);
-    box.style.display='none';
-    box.value='';
-  }
-});
-
-// restore avatar
-const saved=localStorage.getItem('avatarURL');
-if(saved) avatar.style.backgroundImage=`url(${saved})`;
 
 // stars
 const c=document.getElementById('stars'),ctx=c.getContext('2d');
